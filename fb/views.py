@@ -107,6 +107,7 @@ def edit_profile_view(request, user):
             'last_name': profile.user.last_name,
             'gender': profile.gender,
             'date_of_birth': profile.date_of_birth,
+            'interests': profile.user.interests.all(),
         }
         avatar = SimpleUploadedFile(
             profile.avatar.name, profile.avatar.file.read()) \
@@ -124,6 +125,12 @@ def edit_profile_view(request, user):
             profile.date_of_birth = form.cleaned_data['date_of_birth']
             if form.cleaned_data['avatar']:
                 profile.avatar = form.cleaned_data['avatar']
+
+            interests = form.cleaned_data['interests']
+            for interest in interests:
+                i = Interest.objects.get(name=interest)
+                i.users.add(request.user)
+
             profile.save()
 
             return redirect(reverse('profile', args=[profile.user.username]))
