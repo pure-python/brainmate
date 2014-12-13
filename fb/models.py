@@ -51,9 +51,27 @@ class UserProfile(models.Model):
         return self.avatar.url if self.avatar \
             else static(settings.AVATAR_DEFAULT)
 
-
 @receiver(post_save, sender=User)
 def callback(sender, instance, *args, **kwargs):
     if not hasattr(instance, 'profile'):
         instance.profile = UserProfile()
         instance.profile.save()
+
+
+class Answer(models.Model):
+    question_id = models.IntegerField()
+    answer_description = models.CharField(max_length = 30)
+    correct_answer = models.BooleanField()
+
+class Question(models.Model):
+    quesiton_description = models.CharField(max_length = 300)
+    points = models.IntegerField()
+    possible_answers = models.ManyToManyField(Answer)
+
+
+class Questionnaire(models.Model):
+    user_id = models.ForeignKey(User)
+    threshold = models.IntegerField()
+
+    def check_answers(answers):
+        return true; # testing purposes
