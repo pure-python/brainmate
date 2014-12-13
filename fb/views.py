@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import HttpResponseForbidden
 
-from fb.models import UserPost, UserPostComment, UserProfile
+from fb.models import UserPost, UserPostComment, UserProfile, Interest
 from fb.forms import (
     UserPostForm, UserPostCommentForm, UserLogin, UserProfileForm,
 )
@@ -88,8 +88,10 @@ def logout_view(request):
 @login_required
 def profile_view(request, user):
     profile = UserProfile.objects.get(user__username=user)
+    interests = Interest.objects.filter(users__username=user)
     context = {
         'profile': profile,
+        'interests': interests
     }
     return render(request, 'profile.html', context)
 
