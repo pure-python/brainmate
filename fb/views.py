@@ -136,32 +136,17 @@ def edit_profile_view(request, user):
 
 @login_required
 def edit_questionnaire_view(request, user):
-
     items = list()
-
     questionnaire = Questionnaire.objects.get(owner__username=user)
     questions = Question.objects.filter(questionnaire_id=questionnaire.id)
-
     for q in questions:
         answers = Answer.objects.filter(question=q)
         items.append({"question": q, "answers": answers})
-
-    # for idx, val in enumerate(questions):
-    #     question_answers = Answer.objects.filter(question_id=idx + 1)
-    #     print(question_answers)
-    #     answers.append(question_answers)
-
-    # if not request.user == questionnaire.owner:
-    #     return HttpResponseForbidden()
-
-    print(items)
-
     if request.method == 'GET':
         context = {
             'questionnaire': questionnaire,
             'items': items,
         }
-
     return render(request, 'edit_questionnaire.html', context)
 
 @login_required
