@@ -18,6 +18,9 @@
     </tr>
   </table>
 
+  <hr />
+  <a href="{% url 'edit_questionnaire' user.username %}">Edit Questionnaire</a>
+  <hr />
 
   Interests:
     {% if interests.count %}
