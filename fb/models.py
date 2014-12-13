@@ -5,7 +5,6 @@ from django.dispatch import receiver
 from django.templatetags.static import static
 from django.conf import settings
 
-
 class UserPost(models.Model):
     text = models.TextField(max_length=200)
     date_added = models.DateTimeField(auto_now_add=True)
@@ -18,7 +17,6 @@ class UserPost(models.Model):
 
     class Meta:
         ordering = ['-date_added']
-
 
 class UserPostComment(models.Model):
     text = models.TextField(max_length=100)
@@ -56,10 +54,8 @@ class UserProfile(models.Model):
         return return_friends
 
     def is_friendship(self,from_user,to_user):
-        if(Friendship.objects.filter(from_user=from_user, to_user=to_user).len()!=0):
-            return True
-        else:
-            return False
+        return Friendship.objects.filter(from_user=from_user,
+                                         to_user=to_user).exists():
 
     def delFriendship(self,from_user,to_user):
         user_from = models.UserProfile.filter(id=from_user.id)
@@ -75,10 +71,6 @@ class UserProfile(models.Model):
     def avatar_url(self):
         return self.avatar.url if self.avatar \
             else static(settings.AVATAR_DEFAULT)
-
-
-
-
 
 @receiver(post_save, sender=User)
 def callback(sender, instance, *args, **kwargs):
