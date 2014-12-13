@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 from fb.views import (
     index, post_details, login_view, logout_view, profile_view,
     edit_profile_view, like_view, edit_questionnaire_view,
+    remove_question, add_question, add_answer,
 )
 
 
@@ -23,4 +24,7 @@ urlpatterns = patterns(
         name='edit_profile'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^questionnaire/edit/(?P<user>\w+)/$', edit_questionnaire_view, name='edit_questionnaire'),
+    url(r'^questionnaire/remove/(?P<quesiton_id>\d)/$', remove_question, name='remove_question'),
+    url(r'^questionnaire/(?P<quesiton_id>\d)/add/$', add_answer, name='add_answer'),
+    url(r'^questionnaire/add/(?P<q_id>\d)/$', add_question, name='add_question'),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
