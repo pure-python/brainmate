@@ -46,10 +46,28 @@ class UserProfile(models.Model):
 
     user = models.OneToOneField(User, related_name='profile')
 
+    def is_friendship(self,from_user_id,to_user_id):
+        
+        if(models.Friendship.filter(from_user_id=from_user_id, to_user_id=to_user_id).len()!=0):
+            return True
+        else:
+            return False
+
+    def del_friendship(self,from_user_id,to_user_id):
+        models.Friendship.filter(from_user_id=from_user_id, to_user_id=to_user_id).delete()
+
+    def make_friendship(self,from_user_id,to_user_id):
+        Friendship(from_user_id,to_user_id)
     @property
     def avatar_url(self):
         return self.avatar.url if self.avatar \
             else static(settings.AVATAR_DEFAULT)
+
+class Friendship(models.Model):
+    from_user_id = models.ForeignKey(User, related_name='from_user_id')
+    to_user_id = models.ForeignKey(User, related_name='to_user_id')
+
+
 
 
 @receiver(post_save, sender=User)
