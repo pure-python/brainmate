@@ -33,6 +33,9 @@ class UserPostComment(models.Model):
     class Meta:
         ordering = ['date_added']
 
+class Friendship(models.Model):
+    from_user = models.ForeignKey('fb.UserProfile', related_name='from_user')
+    to_user = models.ForeignKey('fb.UserProfile', related_name='to_user')
 
 class UserProfile(models.Model):
     GENDERS = (
@@ -45,27 +48,34 @@ class UserProfile(models.Model):
     avatar = models.ImageField(upload_to='images/', blank=False, null=True)
 
     user = models.OneToOneField(User, related_name='profile')
+    def get_friends(self):
+        return_friends = []
+        friends = Friendship.objects.filter(from_user=self.user)
+        for friend in friends:
+            return_friends.append(friend.to_user.user.first_name)
+        return return_friends
 
-    def is_friendship(self,from_user_id,to_user_id):
-        
-        if(models.Friendship.filter(from_user_id=from_user_id, to_user_id=to_user_id).len()!=0):
+    def is_friendship(self,from_user,to_user):
+        if(Friendship.objects.filter(from_user=from_user, to_user=to_user).len()!=0):
             return True
         else:
             return False
 
-    def del_friendship(self,from_user_id,to_user_id):
-        models.Friendship.filter(from_user_id=from_user_id, to_user_id=to_user_id).delete()
+    # def delFriendship(self,from_user,to_user):
+    #     user_from = models.UserProfile.filter(id=from_user_id)
+    #     user_to = models.UserProfile.filter(id=to_user_id)
+    #     models.Friendship.filter(from_user=user_from, to_user=user_id).delete()
 
-    def make_friendship(self,from_user_id,to_user_id):
-        Friendship(from_user_id,to_user_id)
+    # def makeFriendship(self,from_user,to_user):
+    #     user_from = models.UserProfile.filter(id=from_user_id)
+    #     user_to = models.UserProfile.filter(id=to_user_id)
+    #     f = Friendship(from_user = user_from,to_user = user_to)
+    #     f.save()
     @property
     def avatar_url(self):
         return self.avatar.url if self.avatar \
             else static(settings.AVATAR_DEFAULT)
 
-class Friendship(models.Model):
-    from_user_id = models.ForeignKey(User, related_name='from_user_id')
-    to_user_id = models.ForeignKey(User, related_name='to_user_id')
 
 
 

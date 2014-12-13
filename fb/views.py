@@ -10,7 +10,6 @@ from fb.forms import (
     UserPostForm, UserPostCommentForm, UserLogin, UserProfileForm,
 )
 
-
 @login_required
 def index(request):
     posts = UserPost.objects.all()
@@ -88,8 +87,10 @@ def logout_view(request):
 @login_required
 def profile_view(request, user):
     profile = UserProfile.objects.get(user__username=user)
+    friends = profile.get_friends()
     context = {
         'profile': profile,
+        'friends': friends,
     }
     return render(request, 'profile.html', context)
 
