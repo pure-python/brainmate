@@ -5,9 +5,15 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import HttpResponseForbidden
 
-from fb.models import UserPost, UserPostComment, UserProfile, Interest, User
+
+from fb.models import (
+    UserPost, UserPostComment, UserProfile, Questionnaire, Answer,
+    Question, Interest, User
+)
+
 from fb.forms import (
     UserPostForm, UserPostCommentForm, UserLogin, UserProfileForm,
+    QuestionFrom, AddAnswerForm,
 )
 
 
@@ -141,6 +147,72 @@ def edit_profile_view(request, user):
     }
     return render(request, 'edit_profile.html', context)
 
+@login_required
+def edit_questionnaire_view(request, user):
+    if request.method == 'GET':
+        items = list()
+        questionnaire = Questionnaire.objects.get(owner__username=user)
+        questions = Question.objects.filter(questionnaire_id=questionnaire.id)
+        for q in questions:
+            answers = Answer.objects.filter(question=q)
+            items.append({"question": q, "answers": answers})
+
+        context = {
+            'questionnaire': questionnaire,
+            'items': items,
+        }
+    return render(request, 'edit_questionnaire.html', context)
+
+
+@login_required
+def add_question(request, q_id):
+    if request.method == 'GET':
+        form = QuestionFrom()
+        context = {
+            'form': form
+        }
+        return render(request, 'add_question.html', context)
+
+    elif request.method == 'POST':
+        form = QuestionFrom(request.POST)
+        if form.is_valid():
+            q = Question()
+            q.questionnaire_id = q_id
+            q.quesiton_description = form.cleaned_data['question_description']
+            q.points = form.cleaned_data['points']
+
+            q.save()
+
+        return redirect(reverse('edit_questionnaire', args=[request.user.username]))
+
+@login_required
+def add_answer(request, quesiton_id):
+    if request.method == 'GET':
+        form = AddAnswerForm()
+        context = {
+            'form': form
+        }
+
+        return render(request, 'add_answer.html', context)
+    elif request.method == 'POST':
+        form = AddAnswerForm(request.POST)
+        if form.is_valid():
+            a = Answer()
+            a.question = Question.objects.get(pk=quesiton_id)
+            a.answer_description = form.cleaned_data['answer_description']
+            a.correct_answer = form.cleaned_data['correct_answer']
+
+            a.save()
+        return redirect(reverse('edit_questionnaire', args=[request.user.username]))
+
+
+@login_required
+def remove_question(request, quesiton_id):
+    if request.method == 'GET':
+        q = Question.objects.get(pk=quesiton_id)
+        q.delete()
+
+        return redirect(reverse('edit_questionnaire', args=[request.user.username]))
 
 @login_required
 def like_view(request, pk):

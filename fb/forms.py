@@ -1,6 +1,6 @@
 from django.forms import (
     Form, CharField, Textarea, PasswordInput, ChoiceField, DateField,
-    ImageField, MultipleChoiceField,
+    ImageField, BooleanField, IntegerField, MultipleChoiceField
 )
 from django import forms
 
@@ -36,3 +36,11 @@ class UserProfileForm(Form):
             )
     interests = MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                     choices=OPTIONS, required=False)
+
+class QuestionFrom(Form):
+    question_description = CharField(max_length=300)
+    points = IntegerField()
+
+class AddAnswerForm(Form):
+    answer_description = CharField(max_length=30)
+    correct_answer = BooleanField(required=False)

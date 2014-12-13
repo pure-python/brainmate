@@ -51,13 +51,28 @@ class UserProfile(models.Model):
         return self.avatar.url if self.avatar \
             else static(settings.AVATAR_DEFAULT)
 
-
 @receiver(post_save, sender=User)
 def callback(sender, instance, *args, **kwargs):
     if not hasattr(instance, 'profile'):
         instance.profile = UserProfile()
         instance.profile.save()
 
+
+class Question(models.Model):
+    questionnaire_id = models.IntegerField()
+    quesiton_description = models.CharField(max_length=300)
+    points = models.IntegerField()
+
+
+class Answer(models.Model):
+    question = models.ForeignKey(Question)
+    answer_description = models.CharField(max_length=30)
+    correct_answer = models.BooleanField(default=False)
+
+
+class Questionnaire(models.Model):
+    owner = models.ForeignKey(User)
+    threshold = models.IntegerField()
 
 class Interest(models.Model):
     name = models.CharField(max_length=20)
@@ -67,4 +82,3 @@ class Interest(models.Model):
 
     def __unicode__(self):
         return self.name
-

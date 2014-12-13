@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+	<div class="well">
+		<p>ID: {{ questionnaire.id }}</p>
+		<p>Owner: {{ questionnaire.owner }}</p>
+		<p>Threshold: {{ questionnaire.threshold }}</p>
+		<br >
+		<hr />
+		<a href="{% url 'add_question' questionnaire.id %}">Add new Question</a>
+		<hr />
+		{% for item in items %}
+			<div>
+				{{ item.question.quesiton_description }} <br />
+				{% for ans in item.answers %}
+					{{ ans.answer_description }} {{ ans.correct_answer }} <br />
+				{% endfor %}
+			</div>
+			<a href="{% url 'remove_question' item.question.id %}">Remove question</a>
+			<a href="{% url 'add_answer' item.question.id %}">Add answer</a>
+			<hr />
+		{% endfor %}
+	</div>
+{% endblock %}
