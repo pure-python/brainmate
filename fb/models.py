@@ -55,7 +55,7 @@ class UserProfile(models.Model):
 
     def is_friendship(self,from_user,to_user):
         return Friendship.objects.filter(from_user=from_user,
-                                         to_user=to_user).exists():
+                                         to_user=to_user).exists();
 
     def del_friendship(self,from_user,to_user):
         user_from = models.UserProfile.filter(id=from_user.id)

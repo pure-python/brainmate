@@ -17,6 +17,12 @@
       <td>{{ profile.gender }}</td>
     </tr>
   </table>
+  <table>
+    <form enctype="multipart/form-data" method="POST">
+        {% csrf_token %}
+        <button type="submit">Add friend</button>
+    </form>
+  </table>
   <h2>Friends with</h2>
   <ul>
   {% for friend in friends %}
