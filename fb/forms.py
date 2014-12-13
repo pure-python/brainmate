@@ -1,6 +1,6 @@
 from django.forms import (
     Form, CharField, Textarea, PasswordInput, ChoiceField, DateField,
-    ImageField,
+    ImageField, BooleanField, IntegerField,
 )
 
 from fb.models import UserProfile
@@ -27,3 +27,11 @@ class UserProfileForm(Form):
     gender = ChoiceField(choices=UserProfile.GENDERS, required=False)
     date_of_birth = DateField(required=False)
     avatar = ImageField(required=False)
+
+class QuestionFrom(Form):
+    question_description = CharField(max_length=300)
+    points = IntegerField()
+
+class AddAnswerForm(Form):
+    answer_description = CharField(max_length=30)
+    correct_answer = BooleanField(required=False)
