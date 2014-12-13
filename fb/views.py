@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import HttpResponseForbidden
 
-from fb.models import UserPost, UserPostComment, UserProfile, Interest
+from fb.models import UserPost, UserPostComment, UserProfile, Interest, User
 from fb.forms import (
     UserPostForm, UserPostCommentForm, UserLogin, UserProfileForm,
 )
@@ -148,3 +148,18 @@ def like_view(request, pk):
     post.likers.add(request.user)
     post.save()
     return redirect(reverse('post_details', args=[post.pk]))
+
+
+@login_required
+def discover_view(request):
+    user = request.user
+    users = User.objects.all()
+    user_list = []
+
+    for u in users:
+        if u != user:
+            for interest in u.interests.all():
+                if interest in user.interests.all() and u not in user_list:
+                    user_list.append(u)
+
+    return render(request, 'discover.html', { 'user_list': user_list })
