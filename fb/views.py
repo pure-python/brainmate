@@ -127,6 +127,7 @@ def edit_profile_view(request, user):
                 profile.avatar = form.cleaned_data['avatar']
 
             interests = form.cleaned_data['interests']
+            request.user.interests.clear()
             for interest in interests:
                 i = Interest.objects.get(name=interest)
                 i.users.add(request.user)

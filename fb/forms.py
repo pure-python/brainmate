@@ -35,4 +35,4 @@ class UserProfileForm(Form):
             ("Sports", "Sports"),
             )
     interests = MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-                                         choices=OPTIONS, required=False)
+                                    choices=OPTIONS, required=False)
