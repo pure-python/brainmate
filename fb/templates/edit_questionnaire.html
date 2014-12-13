@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+	<div class="well">
+		<p>ID: {{ questionnaire.id }}</p>
+		<p>Owner: {{ questionnaire.owner }}</p>
+		<p>Threshold: {{ questionnaire.threshold }}</p>
+
+		<br >
+
+
+		{% for item in items %}
+			{{ item.question.quesiton_description }} <br />
+			{% for ans in item.answers %}
+				{{ ans.answer_description }} <br />
+			{% endfor %}
+		{% endfor %}
+
+	</div>
+{% endblock %}

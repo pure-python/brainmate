@@ -58,20 +58,18 @@ def callback(sender, instance, *args, **kwargs):
         instance.profile.save()
 
 
-class Answer(models.Model):
-    question_id = models.IntegerField()
-    answer_description = models.CharField(max_length = 30)
-    correct_answer = models.BooleanField()
-
 class Question(models.Model):
-    quesiton_description = models.CharField(max_length = 300)
+    questionnaire_id = models.IntegerField()
+    quesiton_description = models.CharField(max_length=300)
     points = models.IntegerField()
-    possible_answers = models.ManyToManyField(Answer)
+    
+
+class Answer(models.Model):
+    question = models.ForeignKey(Question)
+    answer_description = models.CharField(max_length=30)
+    correct_answer = models.BooleanField()
 
 
 class Questionnaire(models.Model):
-    user_id = models.ForeignKey(User)
+    owner = models.ForeignKey(User)
     threshold = models.IntegerField()
-
-    def check_answers(answers):
-        return true; # testing purposes
