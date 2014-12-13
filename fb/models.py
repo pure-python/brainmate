@@ -61,16 +61,16 @@ class UserProfile(models.Model):
         else:
             return False
 
-    # def delFriendship(self,from_user,to_user):
-    #     user_from = models.UserProfile.filter(id=from_user_id)
-    #     user_to = models.UserProfile.filter(id=to_user_id)
-    #     models.Friendship.filter(from_user=user_from, to_user=user_id).delete()
+    def delFriendship(self,from_user,to_user):
+        user_from = models.UserProfile.filter(id=from_user.id)
+        user_to = models.UserProfile.filter(id=to_user.id)
+        models.Friendship.filter(from_user=user_from, to_user=user_id).delete()
 
-    # def makeFriendship(self,from_user,to_user):
-    #     user_from = models.UserProfile.filter(id=from_user_id)
-    #     user_to = models.UserProfile.filter(id=to_user_id)
-    #     f = Friendship(from_user = user_from,to_user = user_to)
-    #     f.save()
+    def makeFriendship(self,from_user,to_user):
+        user_from = models.UserProfile.filter(id=from_user.id)
+        user_to = models.UserProfile.filter(id=to_user.id)
+        f = Friendship(from_user = user_from,to_user = user_to)
+        f.save()
     @property
     def avatar_url(self):
         return self.avatar.url if self.avatar \
