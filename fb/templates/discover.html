@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+	
+	<h1>Recommended friends:</h1>
+
+	{% for user in user_list %}
+		<a href="{% url 'profile' user.username %}"><h3>{{ user.first_name }} {{ user.last_name }}</h3></a>
+		<img src="{{ user.profile.avatar_url }}" width="80px">
+
+	{% endfor %}
+{% endblock %}

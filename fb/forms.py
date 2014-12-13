@@ -1,7 +1,8 @@
 from django.forms import (
     Form, CharField, Textarea, PasswordInput, ChoiceField, DateField,
-    ImageField, BooleanField, IntegerField,
+    ImageField, BooleanField, IntegerField, MultipleChoiceField
 )
+from django import forms
 
 from fb.models import UserProfile
 
@@ -27,6 +28,14 @@ class UserProfileForm(Form):
     gender = ChoiceField(choices=UserProfile.GENDERS, required=False)
     date_of_birth = DateField(required=False)
     avatar = ImageField(required=False)
+
+    OPTIONS = (
+            ("Cars", "Cars"),
+            ("Dogs", "Dogs"),
+            ("Sports", "Sports"),
+            )
+    interests = MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+                                    choices=OPTIONS, required=False)
 
 class QuestionFrom(Form):
     question_description = CharField(max_length=300)

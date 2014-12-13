@@ -5,10 +5,12 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import HttpResponseForbidden
 
+
 from fb.models import (
     UserPost, UserPostComment, UserProfile, Questionnaire, Answer,
-    Question, Interest
+    Question, Interest, User
 )
+
 from fb.forms import (
     UserPostForm, UserPostCommentForm, UserLogin, UserProfileForm,
     QuestionFrom, AddAnswerForm,
@@ -111,6 +113,7 @@ def edit_profile_view(request, user):
             'last_name': profile.user.last_name,
             'gender': profile.gender,
             'date_of_birth': profile.date_of_birth,
+            'interests': profile.user.interests.all(),
         }
         avatar = SimpleUploadedFile(
             profile.avatar.name, profile.avatar.file.read()) \
@@ -128,6 +131,13 @@ def edit_profile_view(request, user):
             profile.date_of_birth = form.cleaned_data['date_of_birth']
             if form.cleaned_data['avatar']:
                 profile.avatar = form.cleaned_data['avatar']
+
+            interests = form.cleaned_data['interests']
+            request.user.interests.clear()
+            for interest in interests:
+                i = Interest.objects.get(name=interest)
+                i.users.add(request.user)
+
             profile.save()
 
             return redirect(reverse('profile', args=[profile.user.username]))
@@ -210,3 +220,18 @@ def like_view(request, pk):
     post.likers.add(request.user)
     post.save()
     return redirect(reverse('post_details', args=[post.pk]))
+
+
+@login_required
+def discover_view(request):
+    user = request.user
+    users = User.objects.all()
+    user_list = []
+
+    for u in users:
+        if u != user:
+            for interest in u.interests.all():
+                if interest in user.interests.all() and u not in user_list:
+                    user_list.append(u)
+
+    return render(request, 'discover.html', { 'user_list': user_list })
