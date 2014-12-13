@@ -57,15 +57,15 @@ class UserProfile(models.Model):
         return Friendship.objects.filter(from_user=from_user,
                                          to_user=to_user).exists():
 
-    def delFriendship(self,from_user,to_user):
+    def del_friendship(self,from_user,to_user):
         user_from = models.UserProfile.filter(id=from_user.id)
         user_to = models.UserProfile.filter(id=to_user.id)
         models.Friendship.filter(from_user=user_from, to_user=user_id).delete()
 
-    def makeFriendship(self,from_user,to_user):
+    def make_friendship(self,from_user,to_user):
         user_from = models.UserProfile.filter(id=from_user.id)
         user_to = models.UserProfile.filter(id=to_user.id)
-        f = Friendship(from_user = user_from,to_user = user_to)
+        f = Friendship(from_user = user_from, to_user = user_to)
         f.save()
     @property
     def avatar_url(self):
