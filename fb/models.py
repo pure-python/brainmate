@@ -73,3 +73,12 @@ class Answer(models.Model):
 class Questionnaire(models.Model):
     owner = models.ForeignKey(User)
     threshold = models.IntegerField()
+
+class Interest(models.Model):
+    name = models.CharField(max_length=20)
+    icon = models.ImageField(upload_to='images/interests', blank=False, null=True)
+
+    users = models.ManyToManyField(User, related_name='interests')
+
+    def __unicode__(self):
+        return self.name

@@ -7,7 +7,7 @@ from django.http import HttpResponseForbidden
 
 from fb.models import (
     UserPost, UserPostComment, UserProfile, Questionnaire, Answer,
-    Question, 
+    Question, Interest
 )
 from fb.forms import (
     UserPostForm, UserPostCommentForm, UserLogin, UserProfileForm,
@@ -92,8 +92,10 @@ def logout_view(request):
 @login_required
 def profile_view(request, user):
     profile = UserProfile.objects.get(user__username=user)
+    interests = Interest.objects.filter(users__username=user)
     context = {
         'profile': profile,
+        'interests': interests
     }
     return render(request, 'profile.html', context)
 

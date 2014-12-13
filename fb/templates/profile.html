@@ -18,8 +18,25 @@
     </tr>
   </table>
 
+
+  Interests:
+    {% if interests.count %}
+      <br>
+      {% for interest in interests %}
+        {{ interest }} <img src="{{ MEDIA_URL }}{{ interest.icon }}" width="50px" height="50px">
+        {% if not forloop.last %}
+        <br>
+        {% endif %}
+      {% endfor %}
+    {% else %}
+    None
+    {% endif %}
+
+    <br>
+
   {% if user == profile.user %}
     <a href="{% url 'edit_profile' profile.user.username %}">Edit</a>
   {% endif %}
 
 {% endblock %}
+ 
